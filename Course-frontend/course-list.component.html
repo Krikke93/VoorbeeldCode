@@ -1,0 +1,62 @@
+<div class="container">
+  <h2 class="center">Courses</h2>
+  <table class='table table-striped tableNoBorder' id="example">
+    <tr class="form-group">
+      <td>
+        <div class="right-inner-addon searchBar">
+          <i class="glyphicon glyphicon-search"></i>
+          <input type="search" class="form-control" placeholder="Search name, target group" (keyup)="onKey($event)" />
+        </div>
+      </td>
+      <td>
+        <a [routerLink]="['./add']" class="btn btn-default" id="course_add"> <i class="glyphicon glyphicon-plus"></i> Add course </a>
+      </td>
+    </tr>
+  </table>
+
+  <table class='table-hover table-striped table'>
+    <tr>
+      <th class="NameHeader alignment">Name
+        <a class="cursor-hand ">
+          <span class="glyphicon" 
+            [ngClass]="{ 'active': sortNameAsc != null, 'glyphicon-menu-down' : sortNameAsc == true || sortNameAsc == null, 'glyphicon-menu-up' : sortNameAsc == false}"
+            (click)="switchSortNameAsc()">
+          </span>
+         </a>
+      </th>
+      <th class="NameHeader alignment">Target groups</th>
+      <th class="control">
+        <div class="removeButton">Control</div>
+      </th>
+    </tr>
+    <tr *ngFor="let course of courses | async">
+      <td [routerLink]="['/course', course.id]" class="col-md-5 cursor-hand">{{course.name}}</td>
+      <td [routerLink]="['/course', course.id]" class="col-md-4 cursor-hand">
+        <span *ngFor="let targetGroup of course.targetGroups; let index = index"><span *ngIf="targetGroup.active"><span *ngIf="index != 0">, </span>{{targetGroup.name}}</span></span>
+      </td>
+      <td class="control_column col-md-5" align="center">
+        <div *ngIf="isDeleting && isDeleting[course.id]" class="removeButton  removeAlign">
+          <button type="button" class="btn btn-danger" (click)="confirmDelete(course.id)">Confirm</button>
+          <button type="button" class="btn btn-default" (click)="cancel(course.id)">Cancel</button>
+        </div>
+        <div *ngIf="isDeleting && !isDeleting[course.id]" class="removeButton">
+          <a><span class="glyphicon glyphicon-pencil cursor-hand" [routerLink]="['/course', course.id, 'edit']"></span></a>&nbsp;&nbsp;
+          <a><span class="glyphicon glyphicon-trash cursor-hand" (click)="startDelete(course.id)"></span></a>
+        </div>
+      </td>
+
+    </tr>
+  </table>
+  <div id="row">
+    <div class="col-sm-12">
+      <div class="text-center">
+        <ul class="pagination">
+          <li *ngFor="let page of pages | async " [ngClass]='{active: page - 1 === currentIndex}'>
+            <a class="cursor-hand" (click)="setPage(page -1)">{{page}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
